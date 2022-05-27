@@ -12,6 +12,7 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"fmt"
 
 	"github.com/golang/protobuf/descriptor"
 	"github.com/golang/protobuf/proto"
@@ -71,6 +72,8 @@ func request_WorkflowTemplateService_CreateWorkflowTemplate_0(ctx context.Contex
 func local_request_WorkflowTemplateService_CreateWorkflowTemplate_0(ctx context.Context, marshaler runtime.Marshaler, server WorkflowTemplateServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq WorkflowTemplateCreateRequest
 	var metadata runtime.ServerMetadata
+
+	fmt.Println("deletethis: local_request_WorkflowTemplateService_CreateWorkflowTemplate_0")
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
 	if berr != nil {

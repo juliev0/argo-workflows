@@ -208,6 +208,7 @@ func (ctx *Context) resolveTemplateImpl(tmplHolder wfv1.TemplateReferenceHolder,
 		if err != nil {
 			return nil, nil, false, err
 		}
+
 		// Stored the found template.
 		if ctx.workflow != nil {
 			scope := ctx.tmplBase.GetResourceScope()
@@ -222,6 +223,7 @@ func (ctx *Context) resolveTemplateImpl(tmplHolder wfv1.TemplateReferenceHolder,
 			}
 		}
 		tmpl = newTmpl
+		fmt.Printf("deletethis: tmpl set to %v", tmpl)
 	}
 
 	// Update the template base of the context.

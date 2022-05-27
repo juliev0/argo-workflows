@@ -581,6 +581,7 @@ func resolveAllVariables(scope map[string]interface{}, globalParams map[string]s
 				// Allow runtime resolution for "scheduledTime" which will pass from CronWorkflow
 			} else if strings.HasPrefix(tag, common.GlobalVarWorkflowDuration) {
 			} else {
+				fmt.Println("deletethis: resolveAllVariables")
 				return fmt.Errorf("failed to resolve {{%s}}", tag)
 			}
 		}
@@ -610,6 +611,7 @@ func (ctx *templateValidationCtx) validateLeaf(scope map[string]interface{}, tmp
 	if err != nil {
 		return errors.InternalWrapError(err)
 	}
+	fmt.Println("deletethis: validateLeaf")
 	err = resolveAllVariables(scope, ctx.globalParams, string(tmplBytes))
 	if err != nil {
 		return errors.Errorf(errors.CodeBadRequest, "templates.%s: %s", tmpl.Name, err.Error())
@@ -789,6 +791,7 @@ func (ctx *templateValidationCtx) validateSteps(scope map[string]interface{}, tm
 		if err != nil {
 			return errors.InternalWrapError(err)
 		}
+		fmt.Println("deletethis: validateSteps and calling resolveAllVariables")
 		err = resolveAllVariables(scope, ctx.globalParams, string(stepBytes))
 		if err != nil {
 			return errors.Errorf(errors.CodeBadRequest, "templates.%s.steps %s", tmpl.Name, err.Error())

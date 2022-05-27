@@ -12,6 +12,7 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"fmt"
 
 	"github.com/golang/protobuf/descriptor"
 	"github.com/golang/protobuf/proto"
@@ -1297,6 +1298,8 @@ func request_WorkflowService_WorkflowLogs_0(ctx context.Context, marshaler runti
 func request_WorkflowService_SubmitWorkflow_0(ctx context.Context, marshaler runtime.Marshaler, client WorkflowServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq WorkflowSubmitRequest
 	var metadata runtime.ServerMetadata
+
+	fmt.Println("deletethis: intercepting request to submit workflow")
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
 	if berr != nil {
