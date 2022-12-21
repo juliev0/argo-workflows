@@ -1384,6 +1384,7 @@ func getExitCode(pod *apiv1.Pod) *int32 {
 func podHasContainerNeedingTermination(pod *apiv1.Pod, tmpl wfv1.Template) bool {
 	for _, c := range pod.Status.ContainerStatuses {
 		// Only clean up pod when all main containers are terminated
+		fmt.Printf("deletethis: c=%+v\n", c)
 		if tmpl.IsMainContainerName(c.Name) && c.State.Terminated == nil {
 			return false
 		}
@@ -1393,6 +1394,7 @@ func podHasContainerNeedingTermination(pod *apiv1.Pod, tmpl wfv1.Template) bool 
 
 func (woc *wfOperationCtx) cleanUpPod(pod *apiv1.Pod, tmpl wfv1.Template) {
 	if podHasContainerNeedingTermination(pod, tmpl) {
+		fmt.Println("deletethis: cleanUpPod()")
 		woc.controller.queuePodForCleanup(woc.wf.Namespace, pod.Name, terminateContainers)
 	}
 }

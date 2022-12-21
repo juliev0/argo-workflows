@@ -40,6 +40,10 @@ type When struct {
 	bearerToken       string
 }
 
+func (w *When) GetWorkflow() *wfv1.Workflow {
+	return w.wf
+}
+
 func (w *When) SubmitWorkflow() *When {
 	w.t.Helper()
 	if w.wf == nil {

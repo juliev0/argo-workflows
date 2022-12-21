@@ -288,15 +288,20 @@ func (we *WorkflowExecutor) SaveArtifacts(ctx context.Context) error {
 		log.Infof("No output artifacts")
 		return nil
 	}
-	log.Infof("Saving output artifacts")
+	log.Infof("Saving output artifacts, ctx=%+v", ctx)
 	err := os.MkdirAll(tempOutArtDir, os.ModePerm)
 	if err != nil {
+		fmt.Printf("failed to MkdirAll: %v\n", err)
 		return argoerrs.InternalWrapError(err)
 	}
+	fmt.Println("deletethis: successfully made dir")
+	fmt.Printf("deletethis: num artifacts to save: %d\n", len(we.Template.Outputs.Artifacts))
 
 	for i, art := range we.Template.Outputs.Artifacts {
+		fmt.Printf("deletethis: about to save artifact: %+v, ctx:%+v\n", art, ctx)
 		err := we.saveArtifact(ctx, common.MainContainerName, &art)
 		if err != nil {
+			fmt.Printf("failed to save artifact: %v\n", err)
 			return err
 		}
 		we.Template.Outputs.Artifacts[i] = art

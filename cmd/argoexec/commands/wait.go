@@ -2,6 +2,7 @@ package commands
 
 import (
 	"context"
+	"fmt"
 	"os/signal"
 	"syscall"
 	"time"
@@ -32,6 +33,8 @@ func waitContainer(ctx context.Context) error {
 	defer stats.LogStats()
 	stats.StartStatsTicker(5 * time.Minute)
 
+	fmt.Println("wait iteration 1")
+
 	// use a function to constrain the scope of ctx
 	func() {
 		// this allows us to gracefully shutdown, capturing artifacts
@@ -58,8 +61,10 @@ func waitContainer(ctx context.Context) error {
 	// Saving output artifacts
 	err = wfExecutor.SaveArtifacts(ctx)
 	if err != nil {
+		fmt.Printf("got error from SaveArtifacts: %v\n", err)
 		wfExecutor.AddError(err)
 	}
+	fmt.Println("deletethis: about to SaveLogs")
 
 	wfExecutor.SaveLogs(ctx)
 	return wfExecutor.HasError()

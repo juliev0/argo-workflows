@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/argoproj/argo-workflows/v3/util/errors"
@@ -17,7 +18,9 @@ func main() {
 	if err != nil {
 		if exitError, ok := err.(errors.Exited); ok {
 			if exitError.ExitCode() >= 0 {
-				os.Exit(exitError.ExitCode())
+				fmt.Printf("got exit code %d\n", exitError.ExitCode())
+				os.Exit(99)
+				//os.Exit(exitError.ExitCode())
 			} else {
 				os.Exit(137) // probably SIGTERM or SIGKILL
 			}

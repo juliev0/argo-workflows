@@ -569,7 +569,10 @@ func (wfc *WorkflowController) signalContainers(namespace string, podName string
 
 	for _, c := range pod.Status.ContainerStatuses {
 		if c.State.Running == nil {
+			fmt.Printf("deletethis: container %q is still running at time %v\n", c.Name, time.Now())
 			continue
+		} else {
+			fmt.Printf("deletethis: container %q is not still running at time %v\n", c.Name, time.Now())
 		}
 		// problems are already logged at info level, so we just ignore errors here
 		_ = signal.SignalContainer(wfc.restConfig, pod, c.Name, sig)

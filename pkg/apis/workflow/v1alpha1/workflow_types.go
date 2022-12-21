@@ -2888,6 +2888,7 @@ func (tmpl *Template) IsLeaf() bool {
 }
 
 func (tmpl *Template) IsMainContainerName(containerName string) bool {
+	fmt.Printf("deletethis: tmpl.GetMainContainerNames()=%+v\n", tmpl.GetMainContainerNames())
 	for _, c := range tmpl.GetMainContainerNames() {
 		if c == containerName {
 			return true
