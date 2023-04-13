@@ -701,6 +701,7 @@ func (wfc *WorkflowController) processNextItem(ctx context.Context) bool {
 		log.WithFields(log.Fields{"key": key, "error": err}).Error("Failed to get workflow from informer")
 		return true
 	}
+	log.Debugf("temp logging: processNextItem(): key=%q, exists=%v", key, exists)
 	if !exists {
 		// This happens after a workflow was labeled with completed=true
 		// or was deleted, but the work queue still had an entry for it.
@@ -731,6 +732,8 @@ func (wfc *WorkflowController) processNextItem(ctx context.Context) bool {
 		woc.persistUpdates(ctx)
 		return true
 	}
+
+	log.Debugf("temp logging: processNextItem(): key=%q, wf=%q", key, wf.Name)
 
 	// this will ensure we process every incomplete workflow once every 20m
 	wfc.wfQueue.AddAfter(key, workflowResyncPeriod)
@@ -797,6 +800,7 @@ func (wfc *WorkflowController) enqueueWfFromPodLabel(obj interface{}) error {
 		// Ignore pods unrelated to workflow (this shouldn't happen unless the watch is setup incorrectly)
 		return fmt.Errorf("Watch returned pod unrelated to any workflow")
 	}
+	log.Debugf("temp logging: enqueueWfFromPodLabel(): adding rate limited to queue: namespace=%q, name=%q", pod.ObjectMeta.Namespace, workflowName)
 	wfc.wfQueue.AddRateLimited(pod.ObjectMeta.Namespace + "/" + workflowName)
 	return nil
 }
@@ -999,10 +1003,13 @@ func (wfc *WorkflowController) newPodInformer(ctx context.Context) cache.SharedI
 			UpdateFunc: func(old, newVal interface{}) {
 				key, err := cache.MetaNamespaceKeyFunc(newVal)
 				if err != nil {
+					log.Debugf("temp logging: UpdateFunc() error: %v", err)
 					return
 				}
 				oldPod, newPod := old.(*apiv1.Pod), newVal.(*apiv1.Pod)
+				log.Debugf("temp logging: UpdateFunc() called for Pod Informer: name=%q", newPod.Name)
 				if oldPod.ResourceVersion == newPod.ResourceVersion {
+					log.Debugf("temp logging: UpdateFunc() called for Pod Informer: ResourceVersion same: oldPod=%+v, newPod=%+v", oldPod, newPod)
 					return
 				}
 				if !pod.SignificantPodChange(oldPod, newPod) {

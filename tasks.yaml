@@ -36,14 +36,14 @@ spec:
       ports: 9000
       dependencies: install
     - name: controller
-      command: ./dist/workflow-controller
+      command: ./dist/workflow-controller --loglevel=debug
       dependencies: install build-controller port-forward
       env:
         - ARGO_EXECUTOR_PLUGINS=false
         - ARGO_NAMESPACE=argo
         - ARGO_NAMESPACED=true
         - ARGO_MANAGED_NAMESPACE=argo
-        - ARGO_LOG_LEVEL=info
+        - ARGO_LOG_LEVEL=debug
         - ARGO_REMOVE_PVC_PROTECTION_FINALIZER=true
         - ARGO_PROGRESS_PATCH_TICK_DURATION=7s
         - DEFAULT_REQUEUE_TIME=1s
@@ -69,7 +69,7 @@ spec:
         - ARGO_SECURE=false
         - ARGO_NAMESPACE=argo
         - ARGO_NAMESPACED=true
-        - ARGO_LOG_LEVEL=info
+        - ARGO_LOG_LEVEL=debug
         - ARGO_AUTH_MODE=hybrid
         - ARGO_MANAGED_NAMESPACE=argo
         - UPPERIO_DB_DEBUG=1

@@ -28,6 +28,7 @@ var artifactGCEnabled, _ = env.GetBool("ARGO_ARTIFACT_GC_ENABLED", true)
 
 func (woc *wfOperationCtx) garbageCollectArtifacts(ctx context.Context) error {
 
+	woc.log.Debugf("temp logging: garbageCollectArtifacts() for workflow: %q", woc.wf.Name)
 	if !artifactGCEnabled {
 		return nil
 	}
@@ -63,6 +64,7 @@ func (woc *wfOperationCtx) garbageCollectArtifacts(ctx context.Context) error {
 		}
 	}
 
+	woc.log.Debugf("temp logging: garbageCollectArtifacts() for workflow: %q, processing Artifact GC Completion", woc.wf.Name)
 	err := woc.processArtifactGCCompletion(ctx)
 	if err != nil {
 		return err
@@ -501,6 +503,8 @@ func (woc *wfOperationCtx) processArtifactGCCompletion(ctx context.Context) erro
 		return fmt.Errorf("failed to get pods from informer: %w", err)
 	}
 
+	woc.log.Debugf("temp logging: processArtifactGCCompletion(): wf=%q, checking pods: %+v", woc.wf.Name, pods)
+
 	anyPodSuccess := false
 	for _, obj := range pods {
 		pod := obj.(*corev1.Pod)
@@ -508,9 +512,12 @@ func (woc *wfOperationCtx) processArtifactGCCompletion(ctx context.Context) erro
 			continue
 		}
 
+		woc.log.Debugf("temp logging: processArtifactGCCompletion(): wf=%q, pod=%v", woc.wf.Name, pod)
+
 		// make sure we didn't already process this one
 		if woc.wf.Status.ArtifactGCStatus.IsArtifactGCPodRecouped(pod.Name) {
 			// already processed
+			woc.log.Debugf("temp logging: processArtifactGCCompletion(): wf=%q, pod is already recouped! pod=%v", woc.wf.Name, pod)
 			continue
 		}
 
