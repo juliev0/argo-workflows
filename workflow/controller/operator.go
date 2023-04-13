@@ -199,7 +199,7 @@ func (woc *wfOperationCtx) operate(ctx context.Context) {
 		}
 	}()
 
-	woc.log.Info("Processing workflow")
+	woc.log.Info("Processing workflow %q", woc.wf.Name)
 
 	// Set the Execute workflow spec for execution
 	// ExecWF is a runtime execution spec which merged from Wf, WFT and Wfdefault

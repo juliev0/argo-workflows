@@ -70,7 +70,7 @@ func NewRootCommand() *cobra.Command {
 		RunE: func(c *cobra.Command, args []string) error {
 			defer runtimeutil.HandleCrash(runtimeutil.PanicHandlers...)
 
-			cli.SetLogLevel("debug")
+			cli.SetLogLevel(logLevel)
 			cmdutil.SetGLogLevel(glogLevel)
 			cmdutil.SetLogFormatter(logFormat)
 			stats.RegisterStackDumper()
