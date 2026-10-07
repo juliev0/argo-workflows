@@ -34,7 +34,7 @@ jobs:
       # If markdownlint fixes issues, files will be changed. If so, fail the build.
       - run: git diff --exit-code
       # Upload the site so reviewers see it.
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: docs
           path: site
