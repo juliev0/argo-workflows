@@ -134,6 +134,7 @@ const (
 	workflowResyncPeriod                = 20 * time.Minute
 	workflowTemplateResyncPeriod        = 20 * time.Minute
 	podResyncPeriod                     = 30 * time.Minute
+	podPaginationLimit                  = 500
 	clusterWorkflowTemplateResyncPeriod = 20 * time.Minute
 	workflowExistenceCheckPeriod        = 1 * time.Minute
 	workflowTaskSetResyncPeriod         = 20 * time.Minute
@@ -1013,7 +1014,22 @@ func (wfc *WorkflowController) newWorkflowPodWatch(ctx context.Context) *cache.L
 
 	listFunc := func(options metav1.ListOptions) (runtime.Object, error) {
 		options.LabelSelector = labelSelector.String()
-		return c.List(ctx, options)
+		var allPods []apiv1.Pod
+		continueTok := ""
+		options.Limit = podPaginationLimit
+		for {
+			options.Continue = continueTok
+			podList, err := c.List(ctx, options)
+			if err != nil {
+				return nil, err
+			}
+			allPods = append(allPods, podList.Items...)
+			if podList.Continue == "" {
+				break
+			}
+			continueTok = podList.Continue
+		}
+		return &apiv1.PodList{Items: allPods}, nil
 	}
 	watchFunc := func(options metav1.ListOptions) (watch.Interface, error) {
 		options.Watch = true
